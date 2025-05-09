@@ -1,5 +1,6 @@
 # 🚀Automated UK Local Plan Policy Summariser
 
+![generated-image (1) copy](https://github.com/user-attachments/assets/1e99d5da-537f-4769-8d49-5fc971f9c6a2)
 
 
 ## 🎯 Problem Statement
