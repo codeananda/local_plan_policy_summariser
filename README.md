@@ -10,7 +10,7 @@
 | --- | --- |
 | 700+ | Plans processed weekly |
 | 75% | LLM cost cut |
-| 100+ | Policies per plan |
+| 100+ | Concurrent queries per plan |
 | Minutes | Per plan, was weeks of reading |
 
 ## The situation
@@ -46,7 +46,7 @@ The model imposes hard limits — 1,000 pages per PDF, 50MB per file — and the
 
 ### A summary is only as good as the policy list
 
-If stage one misses a policy, no amount of summarising quality gets it back. Extraction returns a structured, numbered policy list and retries automatically whenever the output fails to parse — nothing downstream ever runs against a malformed list. Polished summaries on a shaky index would have been the easy mistake.
+A malformed policy list poisons everything downstream: summaries get orphaned, counts drift, and nobody notices until a policy is queried. Extraction returns a structured, numbered policy list and retries automatically whenever the output fails to parse — nothing downstream ever runs against a malformed list. Polished summaries on a shaky index would have been the easy mistake.
 
 ### Nobody watches a weekly job
 
@@ -58,16 +58,16 @@ At 700+ plans a week, the pipeline has to notice its own failures. Postgres upse
 | --- | --- |
 | Throughput | 700+ Local Plans processed weekly, fully automated |
 | Cost | 75% LLM cost reduction — context caching plus OpenAI's Batch API at half price for bulk runs |
-| Coverage | Every policy in every plan, across all three lifecycle stages |
+| Coverage | All 700+ plans across three lifecycle stages, 100+ policies summarised per plan |
 | Engagement | 5.0★ Upwork contract · 758 hours · $37,891.66 · Dec 2023 – Aug 2024 |
 
-The client company is anonymised here; the product name and the contract figures are public.
+The client company is not named here; the product name, the review, and the contract figures are public on Upwork.
 
 ## What the client said
 
 > "It was great to work with Adam — great communicator and great dev!"
 
-— Jos Pink, Managing Director (5.0★ review, 758-hour engagement)
+— Jos Pink, Managing Director (5.0★ Upwork review)
 
 ## The full case study
 
