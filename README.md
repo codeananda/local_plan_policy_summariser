@@ -1,6 +1,6 @@
 # Every policy in every Local Plan, summarised automatically
 
-**700+ UK Local Plans summarised every week, fully automated — weeks of reading per plan became minutes, at a quarter of the original LLM cost.**
+**700+ UK Local Plans summarised every week, fully automated — weeks of reading per plan became minutes, at about a quarter of the original LLM cost.**
 
 ![Cover](assets/cover.png)
 
@@ -9,13 +9,13 @@
 | Value | What it is |
 | --- | --- |
 | 700+ | Plans processed weekly |
-| 75% | LLM cost cut |
-| 100+ | Concurrent queries per plan |
+| ~75% | LLM cost cut per plan |
+| Up to 100+ | Concurrent queries per plan |
 | Minutes | Per plan, was weeks of reading |
 
 ## The situation
 
-A Local Plan is a council's rulebook for development: what can be built, where, and on what terms. Each one runs to hundreds of pages and more than a hundred policies, and each exists at up to three lifecycle stages — Preferred Options, Pre-Submission, Adoption — with the policies shifting at every one.
+A Local Plan is a council's rulebook for development: what can be built, where, and on what terms. Each one runs to hundreds of pages and up to a hundred-plus policies, and each exists at up to three lifecycle stages — Preferred Options, Pre-Submission, Adoption — with the policies shifting at every one.
 
 For anyone who needs to know what councils actually permit, that is weeks of reading per plan, multiplied across every council in the country.
 
@@ -23,16 +23,16 @@ A UK planning-intelligence company was building LandGPT, a chatbot that answers 
 
 ## What I built
 
-The pipeline runs on Gemini 1.5 Pro through Vertex AI, and it leans hard on context caching: each plan is uploaded and cached once, then 100+ per-policy queries run concurrently against the cache — the plan's hundreds of pages are paid for once, not once per policy. A two-stage chain does the work: stage one extracts the complete policy list as structured output, retrying until it parses; stage two summarises every policy on that list in parallel.
+The pipeline runs on Gemini 1.5 Pro through Vertex AI, and it leans hard on context caching: each plan is uploaded and cached once, then up to 100+ per-policy queries run concurrently against the cache — the plan's hundreds of pages are paid for once, not once per policy. A two-stage chain does the work: stage one extracts the complete policy list as structured output, retrying until it parses; stage two summarises every policy on that list in parallel.
 
 | Step | What happens |
 | --- | --- |
 | Local Plan in | Council PDF uploaded and context-cached once, per lifecycle stage |
 | Policies extracted | Structured policy list, retried until it parses cleanly |
-| Summarised in parallel | 100+ concurrent per-policy queries against the cache |
+| Summarised in parallel | Up to 100+ concurrent per-policy queries against the cache |
 | Stored & served | Postgres upserts, S3 audit copies, straight into LandGPT |
 
-Around the model sits the plumbing that makes this a weekly production job rather than a demo. Results are upserted into Postgres so re-runs are safe; every run leaves a CSV audit copy in S3; failures raise Slack alerts instead of passing silently. Bulk summarisation is routed through OpenAI's Batch API at half price — and with context caching on top, LLM cost came down 75% overall.
+Around the model sits the plumbing that makes this a weekly production job rather than a demo. Results are upserted into Postgres so re-runs are safe; every run leaves a CSV audit copy in S3; failures raise Slack alerts instead of passing silently. Before I took it on, the pipeline sent the whole plan to GPT-4o again for every policy through OpenAI's Batch API, so a long plan was paid for once per policy. With the plan cached once on Gemini, every policy question reads it at a quarter of the normal input price, and LLM cost per plan came down about 75%.
 
 ## The hard parts
 
@@ -57,8 +57,8 @@ At 700+ plans a week, the pipeline has to notice its own failures. Postgres upse
 | Metric | Result |
 | --- | --- |
 | Throughput | 700+ Local Plans processed weekly, fully automated |
-| Cost | 75% LLM cost reduction — context caching plus OpenAI's Batch API at half price for bulk runs |
-| Coverage | All 700+ plans across three lifecycle stages, 100+ policies summarised per plan |
+| Cost | About 75% lower LLM cost per plan from context caching on Gemini 1.5 Pro, replacing a GPT-4o batch job that resent the whole plan for every policy |
+| Coverage | All 700+ plans across three lifecycle stages, up to 100+ policies summarised per plan |
 | Engagement | 5.0★ Upwork contract · 758 hours · $37,891.66 · Dec 2023 – Aug 2024 |
 
 The client company is not named here; the product name, the review, and the contract figures are public on Upwork.
@@ -80,7 +80,7 @@ A designed PDF version of this case study is in this repo: [07-local-plan-summar
 
 ## About Adam
 
-Freelance AI engineer — Expert-Vetted on Upwork (top 1%), 100% Job Success over 70+ projects, $400K+ earned, 5,750+ hours billed. I build production LLM systems for regulated industries: insurance, finance, law.
+Freelance AI engineer — Expert-Vetted on Upwork (top 1%), 100% Job Success over 75+ projects, $500K+ earned, 6,000+ hours billed. I build production LLM systems for regulated industries: insurance, finance, law.
 
 - [Upwork profile](https://www.upwork.com/freelancers/~01153ca9fd0099730e)
 - [GitHub](https://github.com/codeananda)
